@@ -149,4 +149,7 @@ public DieCommand() {
 }
 ```
 
+# help Us improve this library
+Im not good at naming classes, so if you found any class with wrong name please tell me.
+
 

@@ -4,6 +4,38 @@ Java Library that every developer needs!
 __YOU MAY USE THIS LIBRARY AS YOU WANT FREELY__
 
 # Get Started
+You may need to add this to your class path by:
+__Maven Repostitory:__
+```
+<repositories>
+		<repository>
+		    <id>jitpack.io</id>
+		    <url>https://jitpack.io</url>
+		</repository>
+	</repositories>
+```
+```
+	<dependency>
+	    <groupId>com.github.TitanDevX</groupId>
+	    <artifactId>TitanLib</artifactId>
+	    <version>Compile</version>
+	</dependency>
+```
+
+__Gradle:__
+```
+allprojects {
+		repositories {
+			...
+			maven { url 'https://jitpack.io' }
+		}
+	}
+```
+```dependencies {
+		implementation 'com.github.TitanDevX:TitalLib:combile'
+	}
+```
+
 You can get started Just by adding this to your onEnable on your main class: 
 ```Java
 TitanLib.setPlugin(this);

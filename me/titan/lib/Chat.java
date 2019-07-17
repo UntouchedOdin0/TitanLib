@@ -28,166 +28,237 @@ import net.md_5.bungee.api.chat.TextComponent;
 
 public class Chat {
 
-	private static JavaPlugin instance = TitanLib.getPlugin();
-	@Setter
-	@Getter
-	public static boolean showName = true;
+    private static JavaPlugin instance = TitanLib.getPlugin();
+    @Setter
+    @Getter
+    public static boolean showName = true;
 
-	/**
-	 * sends message that display in the middle of the screen.
-	 * <p>
-	 *
-	 *
-	 * @param pl What do you think? ITS THE PLAYER!!!
-	 * @param title TITLE
-	 * @param subtitle SUBTITLE
-	 *
-	 */
+    /**
+     * sends message that display in the middle of the screen.
+     * <p>
+     *
+     *
+     * @param pl       What do you think? ITS THE PLAYER!!!
+     * @param title    TITLE
+     * @param subtitle SUBTITLE
+     *
+     */
 
-	public static void sendTitle(final Player pl, final String title, final String subtitle) {
-		pl.sendTitle(colorize(title), colorize(subtitle), 20, 3 * 20, 10);
+    public static void sendTitle(final Player pl, final String title, final String subtitle) {
+	pl.sendTitle(colorize(title), colorize(subtitle), 20, 3 * 20, 10);
+    }
+
+    /**
+     * Shows a message in the action bar for a player.
+     * 
+     * @param pl    - The Player.
+     * @param title - the title
+     */
+    public static void sendBar(final Player pl, final String title) {
+	Material m;
+	try {
+	    pl.spigot().sendMessage(ChatMessageType.ACTION_BAR, new TextComponent(colorize(title)));
+
+	} catch (final Throwable t) {
+	    tell(pl, title);
+	}
+    }
+
+    /**
+     * Sends messages on the console with colors
+     * 
+     * @param messages - The send messages
+     */
+
+    public static void log(final String... messages) {
+	for (final String message : messages)
+	    log(message);
+    }
+
+    /**
+     * Sends messages on the console with colors
+     * 
+     * @param message - The send message
+     */
+
+    public static void log(final String message) {
+	tell(Bukkit.getConsoleSender(), "[" + instance.getName() + "] " + message);
+    }
+
+    /**
+     * Sends messages on the console with colors, with a type like errors,
+     * warning...
+     * 
+     * @param message - The send messsage
+     * @param type    - if you want to log errors or warnings or just info.
+     */
+
+    public static void log(final String message, LogType type) {
+	String msg = "[" + instance.getName() + "] " + message;
+	Logger l = Logger.getLogger("Minecraft");
+	switch (type) {
+	case ERROR:
+	    l.severe(msg);
+	    break;
+	case WARNING:
+	    l.warning(msg);
+	    break;
+	default:
+	    tell(Bukkit.getConsoleSender(), "[" + instance.getName() + "] " + message);
+	    break;
 	}
 
-	public static void sendBar(final Player pl, final String title) {
-		Material m;
-		try {
-			pl.spigot().sendMessage(ChatMessageType.ACTION_BAR, new TextComponent(colorize(title)));
+    }
 
-		} catch (final Throwable t) {
-			tell(pl, title);
-		}
+    /**
+     * Sends messages on the console with colors, with a type like errors,
+     * warning...
+     * 
+     * @param messages - The send messsages
+     * @param type     - if you want to log errors or warnings or just info.
+     */
+    public static void log(final List<String> messages, LogType type) {
+	List<String> msgs = messages;
+	String fmsg = msgs.get(0);
+	fmsg = "[" + instance.getName() + "] ";
+	msgs.remove(0);
+	for (String msg : msgs) {
+
+	    Logger l = Logger.getLogger("Minecraft");
+	    switch (type) {
+	    case ERROR:
+		l.severe(msg);
+		break;
+	    case WARNING:
+		l.warning(msg);
+		break;
+	    default:
+		tell(Bukkit.getConsoleSender(), msg);
+		break;
+	    }
 	}
 
-	public static void log(final String... messages) {
-		for (final String message : messages)
-			log(message);
+    }
+
+    public static void log(String fmsg, final List<String> messages, LogType type) {
+	Logger l = Logger.getLogger("Minecraft");
+	String fmsgf = "[" + instance.getName() + "] " + fmsg;
+	switch (type) {
+	case ERROR:
+	    l.severe(fmsgf);
+	    break;
+	case WARNING:
+	    l.warning(fmsgf);
+	    break;
+	default:
+	    tell(Bukkit.getConsoleSender(), fmsgf);
+	    break;
 	}
 
-	public static void log(final String messages) {
-		tell(Bukkit.getConsoleSender(), "[" + instance.getName() + "] " + messages);
-	}
+	for (String msg : messages)
+	    switch (type) {
+	    case ERROR:
+		l.severe(msg);
+		break;
+	    case WARNING:
+		l.warning(msg);
+		break;
+	    default:
+		tell(Bukkit.getConsoleSender(), msg);
+		break;
+	    }
 
-	public static void log(final String messages, LogType type) {
-		String msg = "[" + instance.getName() + "] " + messages;
-		Logger l = Logger.getLogger("Minecraft");
-		switch (type) {
-			case ERROR:
-				l.severe(msg);
-				break;
-			case WARNING:
-				l.warning(msg);
-				break;
-			default:
-				tell(Bukkit.getConsoleSender(), "[" + instance.getName() + "] " + messages);
-				break;
-		}
+    }
 
-	}
+    public static void log(final List<String> messages) {
+	List<String> msgs = messages;
+	String fmsg = msgs.get(0);
+	fmsg = "[" + instance.getName() + "] ";
+	msgs.set(0, fmsg);
+	for (String msg : msgs)
+	    tell(Bukkit.getConsoleSender(), msg);
 
-	public static void log(final List<String> messages, LogType type) {
-		List<String> msgs = messages;
-		String fmsg = msgs.get(0);
-		fmsg = "[" + instance.getName() + "] ";
-		msgs.remove(0);
-		for (String msg : msgs) {
+    }
 
-			Logger l = Logger.getLogger("Minecraft");
-			switch (type) {
-				case ERROR:
-					l.severe(msg);
-					break;
-				case WARNING:
-					l.warning(msg);
-					break;
-				default:
-					tell(Bukkit.getConsoleSender(), msg);
-					break;
-			}
-		}
+    public static void log(String fmsg, final List<String> messages) {
+	Logger l = Logger.getLogger("Minecraft");
+	String fmsgf = "[" + instance.getName() + "] " + fmsg;
 
-	}
+	tell(Bukkit.getConsoleSender(), fmsgf);
 
-	public static void log(String fmsg, final List<String> messages, LogType type) {
-		Logger l = Logger.getLogger("Minecraft");
-		String fmsgf = "[" + instance.getName() + "] " + fmsg;
-		switch (type) {
-			case ERROR:
-				l.severe(fmsgf);
-				break;
-			case WARNING:
-				l.warning(fmsgf);
-				break;
-			default:
-				tell(Bukkit.getConsoleSender(), fmsgf);
-				break;
-		}
+	for (String msg : messages)
+	    tell(Bukkit.getConsoleSender(), msg);
 
-		for (String msg : messages)
-			switch (type) {
-				case ERROR:
-					l.severe(msg);
-					break;
-				case WARNING:
-					l.warning(msg);
-					break;
-				default:
-					tell(Bukkit.getConsoleSender(), msg);
-					break;
-			}
+    }
 
-	}
+    /**
+     * Sends messages to player (Colorize with symbol '&')
+     * 
+     * @param toWhom
+     * @param messages
+     */
+    public static void tell(final CommandSender toWhom, final String... messages) {
 
-	public static void log(final List<String> messages) {
-		List<String> msgs = messages;
-		String fmsg = msgs.get(0);
-		fmsg = "[" + instance.getName() + "] ";
-		msgs.set(0, fmsg);
-		for (String msg : msgs)
-			tell(Bukkit.getConsoleSender(), msg);
+	for (final String message : messages)
+	    tell(toWhom, message);
+    }
 
-	}
+    /**
+     * Sends messages to player (Colorize with symbol '&')
+     * 
+     * @param toWhom
+     * @param messages
+     */
+    public static void tell(final CommandSender toWhom, final String message) {
+	String prefix;
 
-	public static void log(String fmsg, final List<String> messages) {
-		Logger l = Logger.getLogger("Minecraft");
-		String fmsgf = "[" + instance.getName() + "] " + fmsg;
+	prefix = showName ? "&6&l" + TitanLib.getPlugin().getName() + " &7&l» " : "";
+	toWhom.sendMessage(colorize(prefix + message));
+    }
 
-		tell(Bukkit.getConsoleSender(), fmsgf);
+    public static void tell(final CommandSender toWhom, final String message, boolean showName) {
+	String prefix;
 
-		for (String msg : messages)
-			tell(Bukkit.getConsoleSender(), msg);
+	prefix = showName ? "&6&l" + TitanLib.getPlugin().getName() + " &7&l» " : "";
+	toWhom.sendMessage(colorize(prefix + message));
+    }
 
-	}
+    /**
+     * Colorizes any string. (With symbol '&')
+     * 
+     * @param message
+     * @return A Colorized string.
+     */
+    public static String colorize(final String message) {
+	return ChatColor.translateAlternateColorCodes('&', message);
+    }
 
-	public static void tell(final CommandSender toWhom, final String... messages) {
-		for (final String message : messages)
-			tell(toWhom, message);
-	}
+    /**
+     * Sends messages for a Conversable(Player in a Coversation).
+     * 
+     * @param Whom
+     * @param message
+     */
+    public static void ConvTell(ConversationContext Whom, String message) {
+	String prefix;
 
-	public static void tell(final CommandSender toWhom, final String message) {
-		String prefix;
+	prefix = showName ? "&8[&c" + TitanLib.getPlugin().getName() + "&8]&f" : "";
+	Whom.getForWhom().sendRawMessage(colorize(prefix + message));
 
-		prefix = showName ? "&8[&c" + TitanLib.getPlugin().getName() + "&8]&f" : "";
-		toWhom.sendMessage(colorize(prefix + message));
-	}
+    }
 
-	public static String colorize(final String message) {
-		return ChatColor.translateAlternateColorCodes('&', message);
-	}
+    /**
+     * Sends messages for a Conversable(Player in a Coversation).
+     * 
+     * @param Whom
+     * @param message
+     */
+    public static void ConvTell(Conversable Whom, String message) {
+	String prefix;
 
-	public static void ConvTell(ConversationContext Whom, String message) {
-		String prefix;
+	prefix = showName ? "&8[&c" + TitanLib.getPlugin().getName() + "&8]&f" : "";
+	Whom.sendRawMessage(colorize(prefix + message));
 
-		prefix = showName ? "&8[&c" + TitanLib.getPlugin().getName() + "&8]&f" : "";
-		Whom.getForWhom().sendRawMessage(colorize(prefix + message));
-
-	}
-
-	public static void ConvTell(Conversable Whom, String message) {
-		String prefix;
-
-		prefix = showName ? "&8[&c" + TitanLib.getPlugin().getName() + "&8]&f" : "";
-		Whom.sendRawMessage(colorize(prefix + message));
-
-	}
+    }
 
 }

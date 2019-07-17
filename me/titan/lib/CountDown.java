@@ -1,90 +1,126 @@
 package me.titan.lib;
 
-import java.util.function.Consumer;
-
 import org.bukkit.Bukkit;
+import org.bukkit.scheduler.BukkitScheduler;
 
-public abstract class CountDown implements Runnable {
-	// Our scheduled task's assigned id, needed for canceling
+/**
+ * 
+ * Easy Class for making easy countDowns.
+ * <br>
+ * <br>
+ * See {@link ExampleClass} for more information.
+ * 
+ * @author TitanDev / JustAgamer
+ *
+ */
 
-	private Integer assignedTaskId;
+public abstract class CountDown {
 
-	// Seconds and shiz
+	final int time;
+	int count;
+	public int taskID;
+	boolean started;
+	boolean async;
 
-	private int seconds;
-	private int secondsLeft;
-
-	// Actions to perform while counting down, before and after
-	// Construct a timer, you could create multiple so for example if
-	// you do not want these "actions"
-
-	/**
-	 * Runs the timer once, decrements seconds etc...
-	 * Really wish we could make it protected/private so you couldn't access it
-	 */
-	public abstract void beforeTimer();
-
-	public abstract void afterTimer();
-
-	public abstract Consumer<CountDown> everySecond();
-
-	public CountDown(int seconds) {
-		// Initializing fields
-
-		this.seconds = seconds;
-		secondsLeft = seconds;
-
+	public CountDown(int time) {
+		this.time = time;
+		startTimer();
 	}
 
-	@Override
-	public void run() {
-		// Is the timer up?
-		if (secondsLeft < 1) {
-			// Do what was supposed to happen after the timer
-			afterTimer();
+	public CountDown(int time, boolean async) {
+		this.time = time;
+		this.async = async;
+		startTimer();
+	}
 
-			// Cancel timer
-			if (assignedTaskId != null)
-				Bukkit.getScheduler().cancelTask(assignedTaskId);
-			return;
+	public void startTimer() {
+		count = time;
+		if (!async) {
+			BukkitScheduler scheduler = Bukkit.getServer().getScheduler();
+			taskID = scheduler.scheduleSyncRepeatingTask(TitanLib.getPlugin(), () -> {
+				if (count == 0) {
+					onTimeUp();
+					stopTimer(taskID);
+
+					return;
+				}
+				if (count % 5 == 0)
+					doEvery5Seconds(count);
+				doEverySecond(count);
+
+				count = count - 1;
+
+			}, 0L, 20L);
+		} else {
+			BukkitScheduler scheduler = Bukkit.getServer().getScheduler();
+			taskID = scheduler.scheduleAsyncRepeatingTask(TitanLib.getPlugin(), () -> {
+				if (count == 0) {
+					onTimeUp();
+					stopTimer(taskID);
+
+					return;
+				}
+				if (count % 5 == 0)
+					doEvery5Seconds(count);
+				doEverySecond(count);
+
+				count = count - 1;
+
+			}, 0L, 20L);
 		}
 
-		// Are we just starting?
-		if (secondsLeft == seconds)
-			beforeTimer();
+	}
 
-		// Do what's supposed to happen every second
-		if (everySecond() != null)
-			everySecond().accept(this);
+	public static void stopTimer(int taskid) {
+		Bukkit.getScheduler().cancelTask(taskid);
+	}
 
-		// Decrement the seconds left
-		secondsLeft--;
+	public void stopTimerr() {
+		Bukkit.getScheduler().cancelTask(taskID);
 	}
 
 	/**
-	 * Gets the total seconds this timer was set to run for
-	 *
-	 * @return Total seconds timer should run
+	 * Do anything every 5 seconds, like sending messages...
+	 * @param currentTime the courent timer amount
 	 */
-	public int getTotalSeconds() {
-		return seconds;
-	}
+	public abstract void doEvery5Seconds(int currentTime);
 
 	/**
-	 * Gets the seconds left this timer should run
-	 *
-	 * @return Seconds left timer should run
+	 * Do anything every seconds, like sending messages...
+	 * 
+	 * @param currentTime the courent timer amount
 	 */
-	public int getSecondsLeft() {
-		return secondsLeft;
-	}
+	public abstract void doEverySecond(int currentTime);
 
 	/**
-	 * Schedules this instance to "run" every second
+	 * What to do when the time up?
+	
 	 */
-	public void scheduleTimer() {
-		// Initialize our assigned task's id, for later use so we can cancel
-		assignedTaskId = Bukkit.getScheduler().scheduleSyncRepeatingTask(TitanLib.getPlugin(), this, 0L, 20L);
-	}
+	public abstract void onTimeUp();
+}
 
+class exampleClass {
+	public void test() {
+		new CountDown(10) {
+
+			@Override
+			public void doEvery5Seconds(int time) {
+				Bukkit.broadcastMessage(Chat.colorize("&4Time Remaining: " + time + " seconds."));
+
+			}
+
+			@Override
+			public void onTimeUp() {
+				Bukkit.broadcastMessage(Chat.colorize("&4Time is up! &cTeleporting to the game!"));
+
+			}
+
+			@Override
+			public void doEverySecond(int currentTime) {
+				Bukkit.broadcastMessage(Chat.colorize("&4Time Remaining: " + time + " seconds."));
+
+			}
+
+		};
+	}
 }

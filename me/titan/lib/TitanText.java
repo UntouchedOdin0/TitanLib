@@ -14,6 +14,12 @@ import net.md_5.bungee.api.chat.ComponentBuilder.FormatRetention;
 import net.md_5.bungee.api.chat.HoverEvent;
 import net.md_5.bungee.api.chat.TextComponent;
 
+/**
+ * Class allow you to work with Spigot Chat Component easily.
+ * 
+ * @author TitanDev / JustAgamer
+ *
+ */
 public class TitanText {
 	private BaseComponent current;
 	private final List<BaseComponent> parts = new ArrayList<>();

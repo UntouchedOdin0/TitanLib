@@ -4,6 +4,13 @@ import org.bukkit.Material;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 
+/**
+ * @deprecated - May not work perfectly
+ * 
+ * @author TitanDev / JustAgamer
+ *
+ */
+@Deprecated
 public class Items {
 
 	public String Name;

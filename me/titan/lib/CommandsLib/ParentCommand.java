@@ -15,10 +15,28 @@ import lombok.Setter;
 import me.titan.lib.Chat;
 import me.titan.lib.Common;
 import me.titan.lib.TitanLib;
-import me.titan.lib.Exceptions.ReturnedCommandException;
 import me.titan.lib.enums.CommandAccess;
 import me.titan.lib.enums.LogType;
 
+/**
+ * 
+ * A Class that represent a Command,
+ * each ParentCommand can have multiple ChildCommand's
+ * <br>
+ * <br>
+ * <b>You may only register this Command on your onEnable using this:</b>
+ * <br> 
+ * 
+ * <code> Common.registerCommand(Command);</code>
+ * <br>
+ * <br>
+ * <b>You May set the childs of a ParentCommand using:</b>
+ * <br>
+ * <code>setChilds(Child1,Child2,..);</code>
+ * 
+ * @author TitanDev / JustAgamer
+ *
+ */
 @Getter
 public abstract class ParentCommand extends Command {
 
@@ -149,14 +167,11 @@ public abstract class ParentCommand extends Command {
 								return false;
 							}
 						}
-						try {
-							clc.run(args, sender != null && p == null ? null : p,
-									p != null && console == null ? null : console);
-							fail = false;
-						} catch (ReturnedCommandException ex) {
 
-							tell(ex.tellMessage);
-						}
+						clc.run(args, sender != null && p == null ? null : p,
+								p != null && console == null ? null : console);
+						fail = false;
+
 					}
 				}
 			else if (!child.isParentAble())
@@ -171,14 +186,11 @@ public abstract class ParentCommand extends Command {
 							return false;
 						}
 					}
-					try {
-						child.run(args, sender, sender != null && p == null ? null : p,
-								p != null && console == null ? null : console);
-						fail = false;
-					} catch (ReturnedCommandException ex) {
 
-						tell(ex.tellMessage);
-					}
+					child.run(args, sender, sender != null && p == null ? null : p,
+							p != null && console == null ? null : console);
+					fail = false;
+
 				}
 
 		if (fail)
@@ -204,16 +216,6 @@ public abstract class ParentCommand extends Command {
 	protected final void tell(String message) {
 		Chat.tell(p != null && console == null ? p : console, message);
 
-	}
-
-	public final void returnTell(String message) {
-		throw new ReturnedCommandException(message);
-	}
-
-	public final void Check(boolean forw, String failMessage) {
-
-		if (!forw)
-			returnTell(failMessage);
 	}
 
 	public void setChilds(ChildCommand... cmds) {

@@ -9,6 +9,13 @@ import org.bukkit.util.Vector;
 
 import lombok.NonNull;
 
+/**
+ * 
+ * A Class allow you to make regoins like WorldGuard.
+ * 
+ * @author TitanDev / JustAgamer / Kangarko
+ *
+ */
 public class RegionUtils {
 	public static boolean isWithinCuboid(Location loc, Location primary, Location secondary) {
 		final Vector primVector = primary.toVector(), secVector = secondary.toVector();

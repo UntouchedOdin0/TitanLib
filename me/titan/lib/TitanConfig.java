@@ -18,6 +18,13 @@ import org.apache.commons.lang.StringUtils;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.plugin.java.JavaPlugin;
 
+/**
+ * A Class that make working with Configuration
+ * Easier than before!
+ * 
+ * @author TitanDev / JustAgamer and Kangarko
+ *
+ */
 public class TitanConfig extends YamlConfiguration {
 
 	private static JavaPlugin instance = TitanLib.getPlugin();

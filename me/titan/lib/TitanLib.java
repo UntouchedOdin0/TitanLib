@@ -4,7 +4,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.entity.Player;
 import org.bukkit.event.Listener;
@@ -12,7 +11,6 @@ import org.bukkit.plugin.java.JavaPlugin;
 
 import lombok.Getter;
 import lombok.Setter;
-import me.titan.lib.blockLib.BlockListener;
 
 @Setter
 @Getter
@@ -24,19 +22,12 @@ public class TitanLib implements Listener {
 	@Getter
 	public static boolean registerd;
 	/**
-	 * IF false it will say in every message: "[PluginName] MyMessage".
-	 * <h1>Make this true if you don't want it to do that.
+	 * IF true it will say in every message: "[PluginName] MyMessage".
+	 * <h1>Make this false if you don't want it to do that.
 	 *
 	 *
 	 */
-	public static boolean showName = false;
-
-	public static void register(JavaPlugin p) {
-
-		TitanLib.setPlugin(p);
-		Bukkit.getPluginManager().registerEvents(new BlockListener(), p);
-		TitanLib.setRegisterd(true);
-	}
+	public static boolean showName = true;
 
 	@Setter
 	@Getter
@@ -55,8 +46,8 @@ public class TitanLib implements Listener {
 	}
 
 	/**
-	 * IF false it will say in every message: "[PluginName] MyMessage".
-	 * <h1>Make this true if you don't want it to do that.
+	 * IF true it will say in every message: "[PluginName] MyMessage".
+	 * <h1>Make this false if you don't want it to do that.
 	 *
 	 *
 	 */
